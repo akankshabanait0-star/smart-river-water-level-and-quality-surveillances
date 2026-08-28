@@ -3,8 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SMART RIVER WATER LEVEL AND QUALITY SURVEILLANCE</title>
-    
+    <title>Smart River Water Level and Quality Surveillance | Real-Time India River Monitoring</title>
+
+    <!-- ✅ SEO Meta Tags -->
+    <meta name="description" content="Smart River Water Level and Quality Surveillance system providing real-time monitoring of Indian rivers. Track water quality index (WQI), flood alerts, DO, BOD, pH, turbidity across 40+ CPCB stations.">
+    <meta name="keywords" content="river water quality monitoring, water level surveillance India, CPCB river monitoring, real-time water quality index, WQI India, flood alert system, smart river surveillance, SIH 2026, river pollution monitoring, Ganga water quality, Yamuna water level">
+    <meta name="author" content="Team FUN LINES - Smart India Hackathon 2026">
+    <meta name="robots" content="index, follow">
+    <meta name="language" content="English">
+    <meta name="revisit-after" content="7 days">
+    <link rel="canonical" href="https://smart-river-water-level-and-quality-surveillance.vercel.app/">
+
+    <!-- ✅ Open Graph (Facebook, WhatsApp, LinkedIn preview) -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://smart-river-water-level-and-quality-surveillance.vercel.app/">
+    <meta property="og:title" content="Smart River Water Level & Quality Surveillance | India">
+    <meta property="og:description" content="Real-time GIS-based monitoring of 40+ Indian river stations. Live water quality index, flood alerts, CPCB telemetry data — all in one dashboard.">
+    <meta property="og:image" content="https://smart-river-water-level-and-quality-surveillance.vercel.app/assets/logo.png">
+    <meta property="og:site_name" content="Smart River Surveillance">
+    <meta property="og:locale" content="en_IN">
+
+    <!-- ✅ Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Smart River Water Level & Quality Surveillance | India">
+    <meta name="twitter:description" content="Real-time monitoring of Indian rivers — water quality, flood alerts, CPCB live data on interactive GIS map.">
+    <meta name="twitter:image" content="https://smart-river-water-level-and-quality-surveillance.vercel.app/assets/logo.png">
+
+    <!-- ✅ JSON-LD Structured Data (Google Rich Results + FAQ Schema) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Smart River Water Level and Quality Surveillance",
+      "url": "https://smart-river-water-level-and-quality-surveillance.vercel.app/",
+      "description": "Real-time GIS-based surveillance platform for monitoring water level and quality of Indian rivers using CPCB RTWQMS telemetry data.",
+      "applicationCategory": "EnvironmentalScience",
+      "operatingSystem": "Web Browser",
+      "author": {
+        "@type": "Organization",
+        "name": "Team FUN LINES",
+        "description": "Smart India Hackathon 2026 Team"
+      },
+      "keywords": "river water quality, flood monitoring, CPCB, water quality index, India rivers",
+      "inLanguage": "en-IN"
+    }
+    </script>
+
+    <!-- ✅ FAQ Schema for Google Featured Snippets -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is Smart River Water Level and Quality Surveillance?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Smart River Water Level and Quality Surveillance is a real-time GIS-based web platform that monitors water quality and flood levels across 40+ Indian river stations using live CPCB RTWQMS telemetry data."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Which rivers are monitored in this system?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The system monitors major Indian rivers including Ganga, Yamuna, Brahmaputra, Godavari, Krishna, Narmada, Cauvery, Mahanadi, Sabarmati, Punpun, Damodar, and many more across multiple states."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is Water Quality Index (WQI)?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Water Quality Index (WQI) is a score from 0 to 100 calculated using Weighted Arithmetic method across 12 parameters including DO, BOD, COD, pH, Turbidity, TDS, Nitrate, Conductivity, Ammonia, and Coliform levels."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What data source does this surveillance system use?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The system uses live telemetry data from CPCB RTWQMS (Central Pollution Control Board Real Time Water Quality Monitoring Stations) available at rtwqmsdb1.cpcb.gov.in."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is this river monitoring system free to use?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, Smart River Water Level and Quality Surveillance is completely free to use. It is an open-source project built for Smart India Hackathon 2026 for public environmental awareness."
+          }
+        }
+      ]
+    }
+    </script>
+
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,6 +111,7 @@
     <!-- Custom Theme CSS -->
     <link rel="stylesheet" href="style.css?v=20260823_clean_restore">
 </head>
+
 <body class="light-mode">
 
     <!-- Official Inspection Print Header (Only visible on PDF/A4 Print) -->
@@ -391,11 +486,125 @@
             </div>
         </section>
 
+        <!-- ✅ FAQ Section -->
+        <section id="faq-section" class="panel-card no-print" style="margin-top: 24px;">
+            <div class="panel-header">
+                <h2 class="panel-title"><i class="fa-solid fa-circle-question"></i> Frequently Asked Questions</h2>
+                <span style="font-size:0.85rem; color: var(--text-secondary);">Everything you need to know about river water surveillance</span>
+            </div>
+            <div class="panel-body" style="padding: 10px 30px 30px;">
+
+                <!-- FAQ Item 1 -->
+                <div class="faq-item" onclick="toggleFaq(this)">
+                    <div class="faq-question">
+                        <span><i class="fa-solid fa-droplet" style="color:#0284c7; margin-right:10px;"></i>What is Smart River Water Level and Quality Surveillance?</span>
+                        <i class="fa-solid fa-chevron-down faq-icon"></i>
+                    </div>
+                    <div class="faq-answer">
+                        It is a real-time GIS-based web platform that monitors water quality and flood levels across <strong>40+ Indian river monitoring stations</strong> using live CPCB RTWQMS telemetry data. The dashboard provides instant Water Quality Index (WQI), flood alerts, and 12-parameter water analysis.
+                    </div>
+                </div>
+
+                <!-- FAQ Item 2 -->
+                <div class="faq-item" onclick="toggleFaq(this)">
+                    <div class="faq-question">
+                        <span><i class="fa-solid fa-map-location-dot" style="color:#0284c7; margin-right:10px;"></i>Which rivers are monitored in this system?</span>
+                        <i class="fa-solid fa-chevron-down faq-icon"></i>
+                    </div>
+                    <div class="faq-answer">
+                        Major Indian rivers monitored include <strong>Ganga, Yamuna, Brahmaputra, Godavari, Krishna, Narmada, Cauvery, Mahanadi, Sabarmati, Punpun, Damodar, Baitarani</strong> and many more across multiple states of India.
+                    </div>
+                </div>
+
+                <!-- FAQ Item 3 -->
+                <div class="faq-item" onclick="toggleFaq(this)">
+                    <div class="faq-question">
+                        <span><i class="fa-solid fa-vial" style="color:#0284c7; margin-right:10px;"></i>What is Water Quality Index (WQI) and how is it calculated?</span>
+                        <i class="fa-solid fa-chevron-down faq-icon"></i>
+                    </div>
+                    <div class="faq-answer">
+                        WQI is a single score from <strong>0 to 100</strong> representing overall river health. It is calculated using the <strong>Weighted Arithmetic Water Quality Index (WAWQI)</strong> method across 12 parameters: Dissolved Oxygen (DO), BOD, COD, pH, Turbidity, TDS, Nitrate, Conductivity, Temperature, Ammonia, Fecal Coliform, and Total Coliform — as per <strong>BIS IS 10500 standards</strong>.
+                    </div>
+                </div>
+
+                <!-- FAQ Item 4 -->
+                <div class="faq-item" onclick="toggleFaq(this)">
+                    <div class="faq-question">
+                        <span><i class="fa-solid fa-satellite-dish" style="color:#0284c7; margin-right:10px;"></i>What data source does this system use?</span>
+                        <i class="fa-solid fa-chevron-down faq-icon"></i>
+                    </div>
+                    <div class="faq-answer">
+                        The system fetches live telemetry data directly from <strong>CPCB RTWQMS (Central Pollution Control Board – Real Time Water Quality Monitoring Stations)</strong> server at <code>rtwqmsdb1.cpcb.gov.in</code>. A resilient fallback dataset ensures <strong>100% uptime</strong> even when government servers are temporarily unavailable.
+                    </div>
+                </div>
+
+                <!-- FAQ Item 5 -->
+                <div class="faq-item" onclick="toggleFaq(this)">
+                    <div class="faq-question">
+                        <span><i class="fa-solid fa-triangle-exclamation" style="color:#0284c7; margin-right:10px;"></i>How does the flood alert system work?</span>
+                        <i class="fa-solid fa-chevron-down faq-icon"></i>
+                    </div>
+                    <div class="faq-answer">
+                        The system continuously monitors water level readings against pre-defined thresholds for each station. When a parameter like <strong>DO drops below 4 mg/L</strong> or turbidity exceeds safe limits, an instant color-coded alert is triggered on the dashboard map with red/orange pins and warning banners.
+                    </div>
+                </div>
+
+                <!-- FAQ Item 6 -->
+                <div class="faq-item" onclick="toggleFaq(this)">
+                    <div class="faq-question">
+                        <span><i class="fa-solid fa-file-pdf" style="color:#0284c7; margin-right:10px;"></i>Can I download or print inspection reports?</span>
+                        <i class="fa-solid fa-chevron-down faq-icon"></i>
+                    </div>
+                    <div class="faq-answer">
+                        Yes! You can generate a <strong>1-click A4 PDF inspection report</strong> for any monitoring station directly from the dashboard. The report includes all 12 water quality parameters, WQI score, station metadata, and timestamp — ready for official use by CPCB/SPCB officers.
+                    </div>
+                </div>
+
+                <!-- FAQ Item 7 -->
+                <div class="faq-item" onclick="toggleFaq(this)">
+                    <div class="faq-question">
+                        <span><i class="fa-solid fa-lock-open" style="color:#0284c7; margin-right:10px;"></i>Is this platform free to use?</span>
+                        <i class="fa-solid fa-chevron-down faq-icon"></i>
+                    </div>
+                    <div class="faq-answer">
+                        Yes, this platform is <strong>completely free</strong> for public use. It is an open-source initiative developed by <strong>Team FUN LINES</strong> for Smart India Hackathon 2026, aimed at promoting environmental awareness and transparent river health monitoring across India.
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer style="text-align:center; padding: 20px; margin-top: 16px; color: var(--text-secondary); font-size: 0.82rem;" class="no-print">
+            <p>© 2026 Smart River Water Level & Quality Surveillance | Built by <strong>Team FUN LINES</strong> for Smart India Hackathon 2026</p>
+            <p style="margin-top:4px;">Data Source: <a href="http://rtwqmsdb1.cpcb.gov.in" target="_blank" style="color: var(--cyan-primary);">CPCB RTWQMS</a> | Standards: BIS IS 10500 / IS 2296</p>
+        </footer>
+
     </main>
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="script.js?v=20260823_clean_restore"></script>
+
+    <!-- FAQ Toggle Script -->
+    <script>
+    function toggleFaq(item) {
+        const answer = item.querySelector('.faq-answer');
+        const icon = item.querySelector('.faq-icon');
+        const isOpen = item.classList.contains('open');
+        document.querySelectorAll('.faq-item').forEach(i => {
+            i.classList.remove('open');
+            i.querySelector('.faq-answer').style.maxHeight = null;
+            i.querySelector('.faq-icon').style.transform = 'rotate(0deg)';
+        });
+        if (!isOpen) {
+            item.classList.add('open');
+            answer.style.maxHeight = answer.scrollHeight + 'px';
+            icon.style.transform = 'rotate(180deg)';
+        }
+    }
+    </script>
 </body>
 </html>
+
