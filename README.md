@@ -10,7 +10,7 @@
 
 ## 🌐 Live Demo
 
-👉 **[smart-river-water-level-and-quality-surveillance.vercel.app](https://smart-river-water-level-and-quality-surveillance.vercel.app)**
+👉 **[smart-river-water-level-and-quality-surveillance.vercel.app](https://smart-river-water-level-and-quality.vercel.app/)**
 
 ---
 
