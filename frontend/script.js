@@ -526,7 +526,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (targetId) {
             stationSelect.value = targetId;
-            displayStationData(targetId, false);
+            const shouldSync = (trigger === 'INIT' || trigger === 'STATION' || trigger === 'MAP');
+            displayStationData(targetId, shouldSync);
         }
     }
 
