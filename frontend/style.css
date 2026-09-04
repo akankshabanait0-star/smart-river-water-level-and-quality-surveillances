@@ -2069,3 +2069,162 @@ body.light-mode .faq-answer {
 body.light-mode .faq-item {
     border-color: rgba(2,132,199,0.2);
 }
+
+/* ============================================================
+   7-DAY CWC ADVANCE FLOOD FORECAST & HYDROGRAPH STYLES
+   ============================================================ */
+.benchmark-box {
+    background: var(--glass-bg, rgba(11,20,38,0.6));
+    border: 1px solid var(--border-color, rgba(56,189,248,0.15));
+    border-radius: 12px;
+    padding: 14px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+.benchmark-box:hover {
+    transform: translateY(-2px);
+    border-color: var(--cyan-primary);
+}
+.bm-label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.bm-val {
+    font-size: 1.45rem;
+    font-weight: 900;
+    font-family: 'Outfit', sans-serif;
+    letter-spacing: -0.5px;
+}
+.bm-sub {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+}
+
+/* 7-Day Horizontal Scrollable Strip */
+.forecast-cards-strip {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 12px;
+    overflow-x: auto;
+    padding-bottom: 6px;
+}
+@media (max-width: 1024px) {
+    .forecast-cards-strip {
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    .forecast-card {
+        min-width: 140px;
+        flex-shrink: 0;
+    }
+}
+
+.forecast-card {
+    background: var(--glass-bg, rgba(11,20,38,0.55));
+    border: 1px solid var(--border-color, rgba(56,189,248,0.15));
+    border-radius: 12px;
+    padding: 14px 10px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.25s ease;
+    position: relative;
+    overflow: hidden;
+}
+.forecast-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--cyan-primary);
+    box-shadow: 0 4px 16px rgba(56, 189, 248, 0.15);
+}
+.forecast-card.peak-day {
+    border-color: #ef4444;
+    box-shadow: 0 0 16px rgba(239, 68, 68, 0.25);
+}
+.fc-day {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+.fc-date {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+}
+.fc-weather-icon {
+    font-size: 1.4rem;
+    margin: 4px 0;
+}
+.fc-rain {
+    font-size: 0.75rem;
+    color: #38bdf8;
+    font-weight: 600;
+}
+.fc-level {
+    font-size: 1.15rem;
+    font-weight: 800;
+    font-family: 'Outfit', sans-serif;
+    color: var(--text-primary);
+    margin-top: 2px;
+}
+.fc-risk-badge {
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 12px;
+    margin-top: 4px;
+    width: 90%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.fc-risk-safe {
+    background: rgba(16, 185, 129, 0.15);
+    color: #10b981;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+}
+.fc-risk-watch {
+    background: rgba(245, 158, 11, 0.15);
+    color: #f59e0b;
+    border: 1px solid rgba(245, 158, 11, 0.3);
+}
+.fc-risk-danger {
+    background: rgba(239, 68, 68, 0.18);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.4);
+    animation: pulseRisk 2s infinite ease-in-out;
+}
+
+/* Light Mode Overrides for Forecast Panel */
+body.light-mode .benchmark-box {
+    background: #ffffff;
+    border-color: #e2e8f0;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+body.light-mode .forecast-card {
+    background: #ffffff;
+    border-color: #e2e8f0;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+body.light-mode .forecast-card:hover {
+    border-color: #0284c7;
+    box-shadow: 0 4px 12px rgba(2, 132, 199, 0.12);
+}
+body.light-mode .forecast-card.peak-day {
+    border-color: #ef4444;
+    box-shadow: 0 0 12px rgba(239, 68, 68, 0.2);
+}
+body.light-mode .forecast-advisory-banner {
+    background: rgba(2, 132, 199, 0.06) !important;
+}
+
