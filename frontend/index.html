@@ -189,17 +189,7 @@
 
         <!-- Floating Filter Glass Bar -->
         <section class="glass-filter-bar no-print">
-            <div class="filter-group">
-                <div class="select-wrapper">
-                    <label><i class="fa-solid fa-water filter-icon"></i> River Name</label>
-                    <select id="river-select" disabled>
-                        <option value="ALL">Loading Rivers...</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="filter-divider"></div>
-
+            <!-- 1. STATE -->
             <div class="filter-group">
                 <div class="select-wrapper">
                     <label><i class="fa-solid fa-location-dot filter-icon"></i> State</label>
@@ -211,6 +201,19 @@
 
             <div class="filter-divider"></div>
 
+            <!-- 2. RIVER NAME -->
+            <div class="filter-group">
+                <div class="select-wrapper">
+                    <label><i class="fa-solid fa-water filter-icon"></i> River Name</label>
+                    <select id="river-select" disabled>
+                        <option value="ALL">Loading Rivers...</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="filter-divider"></div>
+
+            <!-- 3. MONITORING STATION -->
             <div class="filter-group">
                 <div class="select-wrapper">
                     <label><i class="fa-solid fa-satellite-dish filter-icon"></i> Monitoring Station</label>
@@ -222,11 +225,18 @@
 
             <div class="filter-divider"></div>
 
+            <!-- 4. WATER LEVEL & SURVEILLANCE STATUS -->
             <div class="filter-group">
                 <div class="select-wrapper">
-                    <label><i class="fa-solid fa-clock filter-icon"></i> Live Data Status</label>
-                    <div class="last-update-box">
-                        <span>Last Updated: <strong id="last-update">Syncing...</strong></span>
+                    <label><i class="fa-solid fa-gauge-high filter-icon"></i> Water Level & Status</label>
+                    <div class="last-update-box" style="display: flex; flex-direction: column; justify-content: center; min-height: 42px; padding: 4px 10px;">
+                        <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+                            <span style="font-size: 0.85rem; color: var(--text-primary);">Level: <strong id="bar-water-level" style="color: var(--cyan-primary); font-weight: 700;">-- m</strong></span>
+                            <span id="bar-flood-badge" class="badge" style="background: rgba(16,185,129,0.15); color: #10b981; padding: 2px 7px; border-radius: 4px; font-size: 0.72rem; font-weight: 700; white-space: nowrap;">🟢 Normal</span>
+                        </div>
+                        <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 2px;">
+                            Updated: <span id="last-update">Syncing...</span>
+                        </div>
                     </div>
                 </div>
             </div>

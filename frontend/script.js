@@ -526,7 +526,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (targetId) {
             stationSelect.value = targetId;
-            displayStationData(targetId, false);
+            displayStationData(targetId, true);
         }
     }
 
@@ -904,8 +904,48 @@ document.addEventListener('DOMContentLoaded', () => {
         // Update Live CPCB Station Surveillance Camera Photo & Info Panel!
         updateStationLivePhoto(station);
 
+        // Update Floating Filter Bar Water Level & Status Display:
+        const barWaterLevel = document.getElementById('bar-water-level');
+        const barFloodBadge = document.getElementById('bar-flood-badge');
 
+        let levelVal = null;
+        if (stationOverrides['Water Level'] !== undefined && !isNaN(parseFloat(stationOverrides['Water Level']))) {
+            levelVal = parseFloat(stationOverrides['Water Level']);
+        } else if (station.parameters['Water Level'] && station.parameters['Water Level'].value !== undefined && !isNaN(parseFloat(station.parameters['Water Level'].value))) {
+            levelVal = parseFloat(station.parameters['Water Level'].value);
+        } else if (station.parameters['Depth'] && station.parameters['Depth'].value !== undefined && !isNaN(parseFloat(station.parameters['Depth'].value))) {
+            levelVal = parseFloat(station.parameters['Depth'].value);
+        }
 
+        if (barWaterLevel) {
+            if (levelVal !== null) {
+                barWaterLevel.textContent = `${levelVal.toFixed(2)} m`;
+            } else {
+                barWaterLevel.textContent = 'Normal';
+            }
+        }
+
+        if (barFloodBadge) {
+            if (levelVal !== null) {
+                if (levelVal > 60 || (levelVal > 4 && levelVal < 20)) {
+                    barFloodBadge.style.background = 'rgba(239, 68, 68, 0.15)';
+                    barFloodBadge.style.color = '#ef4444';
+                    barFloodBadge.innerHTML = '🔴 Flood Alert';
+                } else if (levelVal > 40 || (levelVal >= 2.5 && levelVal <= 4)) {
+                    barFloodBadge.style.background = 'rgba(245, 158, 11, 0.15)';
+                    barFloodBadge.style.color = '#f59e0b';
+                    barFloodBadge.innerHTML = '🟡 Warning';
+                } else {
+                    barFloodBadge.style.background = 'rgba(16, 185, 129, 0.15)';
+                    barFloodBadge.style.color = '#10b981';
+                    barFloodBadge.innerHTML = '🟢 Normal';
+                }
+            } else {
+                barFloodBadge.style.background = 'rgba(16, 185, 129, 0.15)';
+                barFloodBadge.style.color = '#10b981';
+                barFloodBadge.innerHTML = '🟢 Normal';
+            }
+        }
     }
 
     // Helper: Construct Official CPCB Server Station Image URL (Supports Admin Custom Uploads)
