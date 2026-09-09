@@ -1,16 +1,14 @@
 # 🌊 Smart River Water Level and Quality Surveillance
 
-![Live](https://img.shields.io/badge/Status-Live-brightgreen) ![License](https://img.shields.io/badge/License-MIT-blue) ![SIH](https://img.shields.io/badge/SIH-2026-orange)
+![Live](https://img.shields.io/badge/Status-Live-brightgreen) ![License](https://img.shields.io/badge/License-MIT-blue)
 
-> **Smart India Hackathon 2026** | Problem Statement ID: **SIH26085**  
-> Theme: **AI / IoT / Environment** | Category: **Software**  
-> Team: **FUN LINES**
+> **Real-Time River Surveillance System** | Powered by CPCB RTWQMS Telemetry & Web-GIS Analytics
 
 ---
 
 ## 🌐 Live Demo
 
-👉 **[smart-river-water-level-and-quality-surveillance.vercel.app](https://smart-river-water-level-and-quality.vercel.app/)**
+👉 **[smart-river-water-level-and-quality.vercel.app](https://smart-river-water-level-and-quality.vercel.app/)**
 
 ---
 
@@ -22,7 +20,7 @@ A real-time GIS-based web platform for monitoring **river water levels and quali
 
 - 🗺️ **Interactive India Map** — 40+ river monitoring stations with live color-coded status pins
 - 📊 **Real-Time Water Quality Index (WQI)** — Weighted Arithmetic calculation across 12 parameters
-- 🚨 **Automated Flood & Toxic Alerts** — Instant threshold-based alerts for dangerous readings
+- 🚨 **Real-Time Water Quality & Level Alerts** — Instant threshold-based alerts for critical parameter deviations
 - 🔍 **Smart Cascading Filters** — Filter by River & State with bidirectional auto-sync
 - 📄 **1-Click PDF Reports** — A4 inspection reports generated directly in-browser
 - 📷 **Live Station Webcams** — CPCB webcam snapshot integration
@@ -135,24 +133,7 @@ Your site will be live at:
 
 ---
 
-## 🏆 Hackathon Details
-
-| Field | Details |
-|-------|---------|
-| Problem Statement ID | SIH26085 |
-| Title | Smart River Water Level and Quality Surveillance |
-| Theme | AI / IoT / Environment |
-| Category | Software |
-| Team Name | FUN LINES |
-
----
-
 ## 📄 License
 
 This project is licensed under the **MIT License**.
 
----
-
-<div align="center">
-  Made with ❤️ by <strong>Team FUN LINES</strong> for Smart India Hackathon 2026
-</div>
