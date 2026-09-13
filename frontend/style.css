@@ -41,7 +41,7 @@ body.light-mode {
 
 html, body {
     width: 100%;
-    overflow-x: hidden;
+    overflow-x: clip;
     position: relative;
     -webkit-tap-highlight-color: transparent;
 }
@@ -78,7 +78,7 @@ h1, h2, h3, h4, h5, h6 {
 .navbar {
     position: sticky;
     top: 0;
-    z-index: 100;
+    z-index: 1100;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -87,6 +87,12 @@ h1, h2, h3, h4, h5, h6 {
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     border-bottom: 1px solid var(--glass-border);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transition: box-shadow 0.2s ease;
+}
+
+body.light-mode .navbar {
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
 }
 
 .nav-brand {
@@ -239,7 +245,7 @@ body.light-mode .brand-text h2 {
     display: flex;
     flex-direction: column;
     gap: 24px;
-    overflow-x: hidden;
+    overflow-x: clip;
 }
 
 /* Hero Banner Section */
@@ -983,7 +989,7 @@ body.light-mode th {
 /* Smartphones & Mobile Devices (max-width: 768px) PREMIUM CLEAN MOBILE HEADER FIX */
 @media screen and (max-width: 768px) {
     html, body {
-        overflow-x: hidden !important;
+        overflow-x: clip !important;
         width: 100% !important;
         position: relative !important;
     }
@@ -996,6 +1002,9 @@ body.light-mode th {
     }
 
     .navbar {
+        position: sticky !important;
+        top: 0 !important;
+        z-index: 1100 !important;
         flex-direction: column !important;
         align-items: stretch !important;
         padding: 8px 10px !important;
@@ -1090,7 +1099,7 @@ body.light-mode th {
         padding: 12px 10px !important;
         gap: 14px !important;
         width: 100% !important;
-        overflow-x: hidden !important;
+        overflow-x: clip !important;
     }
 
     .hero-banner {
