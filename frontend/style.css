@@ -142,6 +142,7 @@ body.light-mode .brand-text h2 {
     display: flex;
     align-items: center;
     gap: 8px;
+    white-space: nowrap;
 }
 
 .nav-link:hover, .nav-link.active {
@@ -1030,36 +1031,72 @@ body.light-mode th {
         line-height: 1.2 !important;
     }
 
-    /* ROW 2: MAIN TABS BAR (Equal 3-Pill Segmented Control) */
+    /* ROW 2: MAIN TABS BAR - HORIZONTALLY SCROLLABLE/SWIPEABLE */
     .nav-menu {
         width: 100% !important;
+        max-width: 100% !important;
         display: flex !important;
-        justify-content: space-between !important;
-        gap: 4px !important;
-        padding: 4px !important;
+        align-items: center !important;
+        justify-content: flex-start !important;
+        gap: 8px !important;
+        padding: 5px 6px !important;
         border-radius: 12px !important;
         background: rgba(255, 255, 255, 0.05) !important;
+        overflow-x: auto !important;
+        overflow-y: hidden !important;
+        -webkit-overflow-scrolling: touch !important;
+        scrollbar-width: none !important;
+        -ms-overflow-style: none !important;
+        touch-action: pan-x !important;
+        box-sizing: border-box !important;
+    }
+
+    .nav-menu::-webkit-scrollbar {
+        display: none !important;
+        width: 0 !important;
+        height: 0 !important;
     }
 
     .nav-link {
-        flex: 1 !important;
+        flex: 0 0 auto !important;
+        display: inline-flex !important;
+        align-items: center !important;
         justify-content: center !important;
-        padding: 6px 3px !important;
-        font-size: 0.72rem !important;
+        gap: 6px !important;
+        padding: 7px 14px !important;
+        font-size: 0.8rem !important;
         font-weight: 700 !important;
-        text-align: center !important;
         border-radius: 8px !important;
         white-space: nowrap !important;
+        text-decoration: none !important;
+        touch-action: manipulation !important;
+    }
+
+    .nav-link i {
+        font-size: 0.85rem !important;
+        flex-shrink: 0 !important;
     }
 
     /* ROW 3: STATUS & ACTIONS BAR - 100% UNCLIPPED & FIT */
     .nav-actions {
         width: 100% !important;
+        max-width: 100% !important;
         display: flex !important;
         align-items: center !important;
         justify-content: space-between !important;
         gap: 4px !important;
         flex-wrap: nowrap !important;
+        overflow-x: auto !important;
+        overflow-y: hidden !important;
+        -webkit-overflow-scrolling: touch !important;
+        scrollbar-width: none !important;
+        -ms-overflow-style: none !important;
+    }
+
+    .nav-actions::-webkit-scrollbar {
+        display: none !important;
+        width: 0 !important;
+        height: 0 !important;
     }
 
     /* Status Pill Badge: Fits 100% without cutting on narrow phone screens! */
