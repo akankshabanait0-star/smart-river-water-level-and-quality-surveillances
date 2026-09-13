@@ -365,15 +365,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (riverSelect) {
             riverSelect.disabled = false;
-            const curRiver = forceReset ? 'ALL' : riverSelect.value;
-            riverSelect.innerHTML = '<option value="ALL">All Rivers (' + rivers.size + ')</option>';
-            Array.from(rivers).sort().forEach(rv => {
-                const opt = document.createElement('option');
-                opt.value = rv;
-                opt.textContent = rv;
-                riverSelect.appendChild(opt);
-            });
-            riverSelect.value = (curRiver && curRiver !== 'ALL' && !forceReset) ? curRiver : 'ALL';
         }
 
         if (stateSelect) {
@@ -389,7 +380,7 @@ document.addEventListener('DOMContentLoaded', () => {
             stateSelect.value = (currentSelectedState && currentSelectedState !== 'ALL' && !forceReset) ? currentSelectedState : 'ALL';
         }
 
-        updateStationList('INIT');
+        updateStationList('INIT', forceReset ? 'RESET' : null);
     }
 
     function updateStationList(trigger = 'INIT', forceStationId = null) {
@@ -399,68 +390,63 @@ document.addEventListener('DOMContentLoaded', () => {
         let curRiver = riverSelect ? riverSelect.value : 'ALL';
         let curState = stateSelect ? stateSelect.value : 'ALL';
 
-        if (trigger === 'RIVER') {
-            if (curRiver && curRiver !== 'ALL') {
-                const riverStations = allStations.filter(s => s.river === curRiver);
-                const riverStates = Array.from(new Set(riverStations.map(s => s.state))).filter(Boolean);
+        // 1. INITIAL LOAD (or Home Reset)
+        if (trigger === 'INIT') {
+            if (!selectedStationId || forceStationId === 'RESET') {
+                // Default cleanly to Bihar & Ganga River
+                const defaultStation = stationMap['11819'] || allStations.find(s => s.state === 'Bihar' && s.river === 'Ganga River') || allStations[0];
+                curState = defaultStation ? defaultStation.state : 'Bihar';
+                curRiver = defaultStation ? defaultStation.river : 'Ganga River';
+                forceStationId = defaultStation ? defaultStation.id : allStations[0].id;
 
-                stateSelect.innerHTML = '';
-                if (riverStates.length === 1) {
-                    const opt = document.createElement('option');
-                    opt.value = riverStates[0];
-                    opt.textContent = riverStates[0];
-                    stateSelect.appendChild(opt);
-                    stateSelect.value = riverStates[0];
-                    curState = riverStates[0];
-                } else {
-                    const defaultOpt = document.createElement('option');
-                    defaultOpt.value = 'ALL';
-                    defaultOpt.textContent = 'All States (' + riverStates.length + ')';
-                    stateSelect.appendChild(defaultOpt);
-                    riverStates.sort().forEach(st => {
-                        const opt = document.createElement('option');
-                        opt.value = st;
-                        opt.textContent = st;
-                        stateSelect.appendChild(opt);
-                    });
-                    if (curState && riverStates.includes(curState)) {
-                        stateSelect.value = curState;
-                    } else {
-                        stateSelect.value = 'ALL';
-                        curState = 'ALL';
-                    }
-                }
+                if (stateSelect) stateSelect.value = curState;
             } else {
-                const allStates = Array.from(new Set(allStations.map(s => s.state))).filter(Boolean);
-                stateSelect.innerHTML = '<option value="ALL">All States (' + allStates.length + ')</option>';
-                allStates.sort().forEach(st => {
-                    const opt = document.createElement('option');
-                    opt.value = st;
-                    opt.textContent = st;
-                    stateSelect.appendChild(opt);
-                });
-                stateSelect.value = 'ALL';
-                curState = 'ALL';
+                // Background periodic refresh: preserve active station and selections
+                const activeStation = stationMap[selectedStationId];
+                if (activeStation) {
+                    curState = activeStation.state || curState;
+                    curRiver = activeStation.river || curRiver;
+                    forceStationId = selectedStationId;
+                }
             }
-        } else if (trigger === 'STATE') {
+
+            // Populate riverSelect scoped to current state
+            if (riverSelect) {
+                if (curState && curState !== 'ALL') {
+                    const stateStations = allStations.filter(s => s.state === curState);
+                    const stateRivers = Array.from(new Set(stateStations.map(s => s.river))).filter(Boolean).sort();
+                    riverSelect.innerHTML = `<option value="ALL">All Rivers in ${curState} (${stateRivers.length})</option>`;
+                    stateRivers.forEach(rv => {
+                        const opt = document.createElement('option');
+                        opt.value = rv;
+                        opt.textContent = rv;
+                        riverSelect.appendChild(opt);
+                    });
+                    riverSelect.value = (curRiver && stateRivers.includes(curRiver)) ? curRiver : 'ALL';
+                    curRiver = riverSelect.value;
+                } else {
+                    const allRivers = Array.from(new Set(allStations.map(s => s.river))).filter(Boolean).sort();
+                    riverSelect.innerHTML = `<option value="ALL">All Rivers (${allRivers.length})</option>`;
+                    allRivers.forEach(rv => {
+                        const opt = document.createElement('option');
+                        opt.value = rv;
+                        opt.textContent = rv;
+                        riverSelect.appendChild(opt);
+                    });
+                    riverSelect.value = (curRiver && allRivers.includes(curRiver)) ? curRiver : 'ALL';
+                    curRiver = riverSelect.value;
+                }
+            }
+        } 
+        // 2. WHEN USER CHANGES STATE DROPDOWN
+        else if (trigger === 'STATE') {
             if (curState && curState !== 'ALL') {
                 const stateStations = allStations.filter(s => s.state === curState);
-                const stateRivers = Array.from(new Set(stateStations.map(s => s.river))).filter(Boolean);
+                const stateRivers = Array.from(new Set(stateStations.map(s => s.river))).filter(Boolean).sort();
 
-                riverSelect.innerHTML = '';
-                if (stateRivers.length === 1) {
-                    const opt = document.createElement('option');
-                    opt.value = stateRivers[0];
-                    opt.textContent = stateRivers[0];
-                    riverSelect.appendChild(opt);
-                    riverSelect.value = stateRivers[0];
-                    curRiver = stateRivers[0];
-                } else {
-                    const defaultOpt = document.createElement('option');
-                    defaultOpt.value = 'ALL';
-                    defaultOpt.textContent = 'All Rivers (' + stateRivers.length + ')';
-                    riverSelect.appendChild(defaultOpt);
-                    stateRivers.sort().forEach(rv => {
+                if (riverSelect) {
+                    riverSelect.innerHTML = `<option value="ALL">All Rivers in ${curState} (${stateRivers.length})</option>`;
+                    stateRivers.forEach(rv => {
                         const opt = document.createElement('option');
                         opt.value = rv;
                         opt.textContent = rv;
@@ -474,36 +460,83 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 }
             } else {
-                const allRivers = Array.from(new Set(allStations.map(s => s.river))).filter(Boolean);
-                riverSelect.innerHTML = '<option value="ALL">All Rivers (' + allRivers.length + ')</option>';
-                allRivers.sort().forEach(rv => {
-                    const opt = document.createElement('option');
-                    opt.value = rv;
-                    opt.textContent = rv;
-                    riverSelect.appendChild(opt);
-                });
-                riverSelect.value = 'ALL';
-                curRiver = 'ALL';
+                const allRivers = Array.from(new Set(allStations.map(s => s.river))).filter(Boolean).sort();
+                if (riverSelect) {
+                    riverSelect.innerHTML = `<option value="ALL">All Rivers (${allRivers.length})</option>`;
+                    allRivers.forEach(rv => {
+                        const opt = document.createElement('option');
+                        opt.value = rv;
+                        opt.textContent = rv;
+                        riverSelect.appendChild(opt);
+                    });
+                    if (curRiver && allRivers.includes(curRiver)) {
+                        riverSelect.value = curRiver;
+                    } else {
+                        riverSelect.value = 'ALL';
+                        curRiver = 'ALL';
+                    }
+                }
+            }
+        } 
+        // 3. WHEN USER CHANGES RIVER DROPDOWN
+        else if (trigger === 'RIVER') {
+            if (curRiver && curRiver !== 'ALL') {
+                const riverStations = allStations.filter(s => s.river === curRiver);
+                const riverStates = Array.from(new Set(riverStations.map(s => s.state))).filter(Boolean).sort();
+
+                if (curState && curState !== 'ALL' && !riverStates.includes(curState)) {
+                    curState = riverStates[0] || 'ALL';
+                    if (stateSelect) stateSelect.value = curState;
+                }
+            }
+        }
+        // 4. WHEN USER CLICKS A MAP PIN
+        else if (trigger === 'MAP' && forceStationId) {
+            const station = stationMap[forceStationId];
+            if (station) {
+                curState = station.state || 'ALL';
+                curRiver = station.river || 'ALL';
+
+                if (stateSelect && curState !== 'ALL') {
+                    stateSelect.value = curState;
+                }
+
+                if (riverSelect) {
+                    if (curState !== 'ALL') {
+                        const stateStations = allStations.filter(s => s.state === curState);
+                        const stateRivers = Array.from(new Set(stateStations.map(s => s.river))).filter(Boolean).sort();
+                        riverSelect.innerHTML = `<option value="ALL">All Rivers in ${curState} (${stateRivers.length})</option>`;
+                        stateRivers.forEach(rv => {
+                            const opt = document.createElement('option');
+                            opt.value = rv;
+                            opt.textContent = rv;
+                            riverSelect.appendChild(opt);
+                        });
+                        riverSelect.value = curRiver;
+                    } else {
+                        riverSelect.value = curRiver;
+                    }
+                }
             }
         }
 
-        // Filter stations matching curRiver and curState
+        // --- FILTER STATIONS STRICTLY MATCHING CURRENT FILTERS ---
         let filtered = allStations;
-        if (curRiver && curRiver !== 'ALL') {
-            filtered = filtered.filter(s => s.river === curRiver);
-        }
         if (curState && curState !== 'ALL') {
             filtered = filtered.filter(s => s.state === curState);
         }
+        if (curRiver && curRiver !== 'ALL') {
+            filtered = filtered.filter(s => s.river === curRiver);
+        }
 
-        // Safety fallback: if filtered is empty, reset filters
+        // Safety fallback: if filtered is empty, reset
         if (filtered.length === 0) {
             filtered = allStations;
             if (riverSelect) riverSelect.value = 'ALL';
             if (stateSelect) stateSelect.value = 'ALL';
         }
 
-        // Populate station dropdown
+        // Populate station dropdown strictly with matching stations!
         stationSelect.disabled = false;
         stationSelect.innerHTML = '<option value="">-- Select Monitoring Station --</option>';
 
@@ -514,7 +547,7 @@ document.addEventListener('DOMContentLoaded', () => {
             stationSelect.appendChild(opt);
         });
 
-        // Automatically select target station or preserve user's active selected station
+        // Determine target station to display
         let targetId = null;
         if (forceStationId && filtered.some(s => s.id === forceStationId)) {
             targetId = forceStationId;
@@ -526,13 +559,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (targetId) {
             stationSelect.value = targetId;
-            const shouldSync = (trigger === 'INIT' || trigger === 'STATION' || trigger === 'MAP');
-            displayStationData(targetId, shouldSync);
+            displayStationData(targetId, false);
         }
     }
 
     // --- Display Station Data & Highlight Selected Marker Pin with RED Pin ---
-    function displayStationData(stationId, autoSyncDropdowns = true) {
+    function displayStationData(stationId, autoSyncDropdowns = false) {
         selectedStationId = stationId;
         const station = stationMap[stationId];
         if (!station) return;
@@ -1289,7 +1321,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (btnRefresh) btnRefresh.addEventListener('click', fetchData);
     if (riverSelect) riverSelect.addEventListener('change', () => updateStationList('RIVER'));
     if (stateSelect) stateSelect.addEventListener('change', () => updateStationList('STATE'));
-    if (stationSelect) stationSelect.addEventListener('change', (e) => displayStationData(e.target.value, true));
+    if (stationSelect) stationSelect.addEventListener('change', (e) => displayStationData(e.target.value, false));
 
     // --- Initial Auto Start ---
     fetchData();

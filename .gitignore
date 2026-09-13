@@ -20,3 +20,6 @@ Thumbs.db
 RESEARCH_PAPER*
 *.pdf
 *.tex
+*.docx
+generate_*.py
+paper_print.html
