@@ -16,6 +16,11 @@
       "dest": "/backend/server.js"
     },
     {
+      "src": "^/index(\\.html)?$",
+      "status": 301,
+      "headers": { "Location": "/" }
+    },
+    {
       "src": "/fallback-data.json(.*)",
       "dest": "/frontend/fallback-data.json"
     },

@@ -1,3 +1,10 @@
+// --- Clean URL: Remove /index.html if present ---
+if (typeof window !== 'undefined' && (window.location.pathname.endsWith('/index.html') || window.location.pathname === '/index.html')) {
+    const cleanPath = window.location.pathname.replace(/\/index\.html$/, '') || '/';
+    const cleanUrl = window.location.origin + cleanPath + window.location.search + window.location.hash;
+    window.history.replaceState(null, '', cleanUrl);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     // --- Theme Toggling (Fixed & Persisted) ---
     const themeBtn = document.getElementById('theme-toggle');
