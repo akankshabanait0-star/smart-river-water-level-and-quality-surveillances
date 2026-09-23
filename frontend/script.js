@@ -297,6 +297,34 @@ document.addEventListener('DOMContentLoaded', () => {
         return 'Regional River Basin';
     }
 
+    // --- Official CPCB RTWQMS Station ID to Station Code Mapping Dictionary ---
+    const STATION_ID_CODE_MAP = {
+        '11819': 'BH72', '11804': 'BH73', '11805': 'BH74', '11822': 'BH75',
+        '11806': 'BH76', '11807': 'BH77', '11808': 'BH78', '11809': 'BH79',
+        '11810': 'BH80', '11811': 'BH81', '11789': 'HR56', '11812': 'JH82',
+        '11813': 'JH83', '11820': 'JH84', '11785': 'UK51', '11821': 'UK52',
+        '11786': 'UK53', '11787': 'UK54', '11788': 'UK55', '11790': 'UT57',
+        '11791': 'UT58', '11792': 'UT59', '11793': 'UT60', '11794': 'UT61',
+        '11779': 'UT62', '11795': 'UT63', '11796': 'UT64', '11797': 'UT65',
+        '11798': 'UT66', '11799': 'UT67', '11800': 'UT68', '11801': 'UT69',
+        '11802': 'UT70', '11803': 'UT71', '11814': 'WB85', '11815': 'WB86',
+        '11816': 'WB87', '11817': 'WB88', '11783': 'WB89', '11784': 'WB90'
+    };
+
+    function getStationCode(station) {
+        if (!station) return 'BH72';
+        const rawNo = (station.stationNo || '').trim();
+        if (rawNo && /^[A-Z]{2}\d+$/i.test(rawNo)) return rawNo.toUpperCase();
+        const idStr = String(station.id || '').trim();
+        if (STATION_ID_CODE_MAP[idStr]) return STATION_ID_CODE_MAP[idStr];
+        if (station.name) {
+            const m = station.name.match(/^([A-Z]{2}\d+)/i);
+            if (m) return m[1].toUpperCase();
+        }
+        if (idStr && /^[A-Z]{2}\d+$/i.test(idStr)) return idStr.toUpperCase();
+        return rawNo || idStr || 'BH72';
+    }
+
     // --- Process Raw Data & Infer River Name ---
     function processRawData(dataArray) {
         stationMap = {};
@@ -308,11 +336,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const name = item.station_name || '';
             const state = item.territory_name || 'General';
             const riverName = inferRiverName(name, state);
+            const resolvedCode = getStationCode({ stationNo: item.station_no, id, name });
 
             if (!stationMap[id]) {
                 stationMap[id] = {
                     id: id,
-                    stationNo: item.station_no,
+                    stationNo: resolvedCode,
                     name: name || 'Unknown Station',
                     river: riverName,
                     state: state,
@@ -948,42 +977,61 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Helper: Construct Official CPCB Server Station Image URL (Supports Admin Custom Uploads & Local Assets)
     function getCpcbStationPhotoUrl(station) {
-        if (!station) return 'assets/stations/BH72_image.jpg';
+        if (!station) return '/assets/stations/BH72_image.jpg';
 
         // 1. Check for Admin Uploaded Custom Station Photo (Base64 Data URL or Web URL)
         const adminPhotos = JSON.parse(localStorage.getItem('admin_station_photos') || '{}');
-        const stNo = station.stationNo || station.id || '';
-        if (stNo && adminPhotos[stNo]) {
-            return adminPhotos[stNo];
-        }
-        if (station.id && adminPhotos[station.id]) {
-            return adminPhotos[station.id];
-        }
-        if (station.photo) {
-            return station.photo;
-        }
+        const code = getStationCode(station);
+        const id = String(station.id || '');
+
+        if (code && adminPhotos[code]) return adminPhotos[code];
+        if (id && adminPhotos[id]) return adminPhotos[id];
+        if (station.photo) return station.photo;
 
         // 2. Local High-Speed Official CPCB Station Monitoring Image (100% Reliable, 0ms, Zero SSL error)
-        if (stNo) {
-            return `assets/stations/${stNo}_image.jpg`;
+        if (code) {
+            return `/assets/stations/${code}_image.jpg`;
         }
-        return 'assets/stations/BH72_image.jpg';
+        return '/assets/stations/BH72_image.jpg';
     }
 
     let photoLoadToken = 0;
-    const cachedStationPhotos = new Set();
+    const stationImageCache = new Map();
 
-    // Background pre-fetcher for all 40 station photos so station switching is 100% instant!
+    // Background smart pre-fetcher: staggered non-blocking batches so network pipe never clogs!
     function precacheAllStationPhotos(stations) {
         if (!stations) return;
-        Object.values(stations).forEach(st => {
-            const url = getCpcbStationPhotoUrl(st);
-            if (url && !cachedStationPhotos.has(url)) {
-                const img = new Image();
-                img.onload = () => cachedStationPhotos.add(url);
-                img.src = url;
-            }
+        const stationList = Object.values(stations);
+        if (stationList.length === 0) return;
+
+        // Prioritize stations in currently selected state first
+        const curState = (stateSelect && stateSelect.value !== 'ALL') ? stateSelect.value : 'Bihar';
+        stationList.sort((a, b) => {
+            if (a.state === curState && b.state !== curState) return -1;
+            if (a.state !== curState && b.state === curState) return 1;
+            return 0;
         });
+
+        let idx = 0;
+        function loadNextBatch() {
+            if (idx >= stationList.length) return;
+            const batch = stationList.slice(idx, idx + 3);
+            idx += 3;
+
+            batch.forEach(st => {
+                const url = getCpcbStationPhotoUrl(st);
+                if (url && !stationImageCache.has(url)) {
+                    const img = new Image();
+                    img.onload = () => stationImageCache.set(url, true);
+                    img.src = url;
+                }
+            });
+
+            setTimeout(loadNextBatch, 250);
+        }
+
+        // Wait 1.0s after initial render before starting background pre-fetch
+        setTimeout(loadNextBatch, 1000);
     }
 
     // --- Live CPCB Station Surveillance & Camera Photo Updater (100% Instant Zero-Delay Switching) ---
@@ -996,75 +1044,53 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (!station) return;
 
+        const code = getStationCode(station);
+
         // Instant Metadata Updates
         if (nameEl) nameEl.textContent = station.name || 'Monitoring Station';
         if (locEl) locEl.textContent = `${station.river || 'River Basin'} | ${station.state || 'India'}`;
         if (codeEl) {
-            const stNo = station.stationNo || station.id || '--';
-            const stId = (station.id && station.id !== stNo) ? ` (ID: ${station.id})` : '';
-            codeEl.textContent = `${stNo}${stId}`;
+            const stId = (station.id && station.id !== code) ? ` (ID: ${station.id})` : '';
+            codeEl.textContent = `${code}${stId}`;
         }
         if (timeEl) timeEl.textContent = station.lastTimestamp ? (station.lastTimestamp.split(' ')[1] || 'Live Stream') : 'Live Stream';
 
+        if (!imgEl) return;
+
         const photoUrl = getCpcbStationPhotoUrl(station);
-        const stNo = station.stationNo || station.id || 'BH72';
-        const proxyUrl = `/api/station-photo/${stNo}`;
-        const defaultFallbackUrl = 'assets/stations/BH72_image.jpg';
+        const defaultFallbackUrl = '/assets/stations/BH72_image.jpg';
+        const currentToken = ++photoLoadToken;
 
-        if (imgEl) {
-            const currentToken = ++photoLoadToken;
+        // 1. Instant direct switch - no blocking preloader, zero race condition!
+        imgEl.style.transition = 'opacity 0.15s ease';
+        imgEl.style.opacity = '0.7';
 
-            // Direct onerror backup on image tag
-            imgEl.onerror = () => {
-                if (currentToken === photoLoadToken) {
-                    if (imgEl.src.indexOf('assets/stations') !== -1 && !imgEl.src.endsWith('BH72_image.jpg')) {
-                        imgEl.src = proxyUrl;
-                    } else {
-                        imgEl.src = defaultFallbackUrl;
-                    }
-                    imgEl.style.opacity = '1';
-                }
-            };
-
-            // If photo was already pre-cached in memory, render immediately with 0ms delay!
-            if (cachedStationPhotos.has(photoUrl)) {
-                imgEl.src = photoUrl;
+        imgEl.onload = () => {
+            if (currentToken === photoLoadToken) {
+                stationImageCache.set(photoUrl, true);
                 imgEl.style.opacity = '1';
-                return;
             }
+        };
 
-            imgEl.style.opacity = '0.7';
-            imgEl.src = photoUrl;
+        imgEl.onerror = () => {
+            if (currentToken === photoLoadToken) {
+                // Try alias with station ID if different from code
+                const idUrl = station.id ? `/assets/stations/${station.id}_image.jpg` : null;
+                if (idUrl && idUrl !== photoUrl && imgEl.src.indexOf(idUrl) === -1) {
+                    imgEl.src = idUrl;
+                } else if (imgEl.src.indexOf('BH72_image.jpg') === -1) {
+                    imgEl.src = defaultFallbackUrl;
+                }
+                imgEl.style.opacity = '1';
+            }
+        };
 
-            const preloader = new Image();
-            preloader.onload = () => {
-                if (currentToken === photoLoadToken) {
-                    cachedStationPhotos.add(photoUrl);
-                    imgEl.src = photoUrl;
-                    imgEl.style.opacity = '1';
-                }
-            };
-            preloader.onerror = () => {
-                if (currentToken === photoLoadToken) {
-                    // Try proxy endpoint
-                    const proxyImg = new Image();
-                    proxyImg.onload = () => {
-                        if (currentToken === photoLoadToken) {
-                            cachedStationPhotos.add(proxyUrl);
-                            imgEl.src = proxyUrl;
-                            imgEl.style.opacity = '1';
-                        }
-                    };
-                    proxyImg.onerror = () => {
-                        if (currentToken === photoLoadToken) {
-                            imgEl.src = defaultFallbackUrl;
-                            imgEl.style.opacity = '1';
-                        }
-                    };
-                    proxyImg.src = proxyUrl;
-                }
-            };
-            preloader.src = photoUrl;
+        imgEl.src = photoUrl;
+
+        // If the browser already has the image decoded in memory, finish immediately!
+        if (imgEl.complete && imgEl.naturalWidth > 0) {
+            stationImageCache.set(photoUrl, true);
+            imgEl.style.opacity = '1';
         }
     }
 
