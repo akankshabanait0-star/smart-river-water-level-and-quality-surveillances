@@ -7,3 +7,11 @@ exports.getLiveData = async (req, res) => {
   }
   res.json(result.data);
 };
+
+exports.getStationPhoto = (req, res) => {
+  const stNo = req.params.stNo;
+  if (!stNo || !/^[A-Za-z0-9_-]+$/.test(stNo)) {
+    return res.status(400).send('Invalid station code');
+  }
+  cpcbService.getStationPhotoStream(stNo, res);
+};

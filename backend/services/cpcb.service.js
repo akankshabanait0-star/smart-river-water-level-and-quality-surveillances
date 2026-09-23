@@ -77,6 +77,45 @@ class CPCBService {
     }
     return { success: false, error: 'No data available', data: [] };
   }
+
+  getStationPhotoStream(stNo, res) {
+    // 1. Check if local asset exists
+    const localPaths = [
+      path.join(__dirname, '../../frontend/assets/stations', `${stNo}_image.jpg`),
+      path.join(process.cwd(), 'frontend/assets/stations', `${stNo}_image.jpg`),
+      path.join(process.cwd(), 'assets/stations', `${stNo}_image.jpg`)
+    ];
+    for (const lp of localPaths) {
+      if (fs.existsSync(lp)) {
+        res.setHeader('Content-Type', 'image/jpeg');
+        res.setHeader('Cache-Control', 'public, max-age=86400, s-maxage=86400');
+        return fs.createReadStream(lp).pipe(res);
+      }
+    }
+
+    // 2. Fetch from live CPCB server with rejectUnauthorized: false
+    const url = `https://rtwqmsdb1.cpcb.gov.in/images/stations/${stNo}_image.jpg`;
+    const agent = new https.Agent({ rejectUnauthorized: false });
+
+    const req = https.get(url, { agent, timeout: 10000 }, (remoteRes) => {
+      if (remoteRes.statusCode === 200) {
+        res.setHeader('Content-Type', remoteRes.headers['content-type'] || 'image/jpeg');
+        res.setHeader('Cache-Control', 'public, max-age=86400, s-maxage=86400');
+        return remoteRes.pipe(res);
+      }
+      res.status(remoteRes.statusCode).end();
+    });
+
+    req.on('error', (err) => {
+      console.warn('CPCB photo proxy error:', err.message);
+      res.status(404).end();
+    });
+
+    req.on('timeout', () => {
+      req.destroy();
+      res.status(504).end();
+    });
+  }
 }
 
 module.exports = new CPCBService();
